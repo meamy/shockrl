@@ -1,0 +1,1 @@
+ocamlfind ocamlc -linkpkg -package curses main.ml
