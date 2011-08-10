@@ -1,1 +1,3 @@
-ocamlfind ocamlc -linkpkg -package curses main.ml
+ocamlfind ocamlc -linkpkg -package curses cmd.ml
+
+ocamlfind ocamlc -linkpkg -package curses cmd.cmo main.ml
