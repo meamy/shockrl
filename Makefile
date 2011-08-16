@@ -6,7 +6,7 @@ bin: Makefile.config
 
 config: Makefile.config
 	touch src/.depend
-	cd curses && make
+	cd ocaml-curses && make
 	cd src && make depend
 
 depend: Makefile.config

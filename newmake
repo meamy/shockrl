@@ -1,2 +1,0 @@
-ocamlopt -I ocaml-curses curses.cmxa -cclib -lcurses src/cmd.ml
-ocamlopt -I ocaml-curses curses.cmxa -I src cmd.cmx -cclib -lcurses -o rl src/main.ml
