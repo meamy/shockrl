@@ -1,6 +1,5 @@
 # -*- mode: Makefile -*-
-APRON = @APRON@
-CBMC = @CBMC@
+CURSES = @CURSES@
 OCAMLC = @OCAMLC@
 OCAMLOPT = @OCAMLOPT@
 OCAMLDEP = @OCAMLDEP@

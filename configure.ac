@@ -137,9 +137,9 @@ fi
 
 # Check for APRON
 if test "$CURSES" = no ; then
-   AC_CHECK_FILE([$OCAMLLIB/apron],
-		 [APRON=$OCAMLLIB/apron],
-		 [AC_MSG_ERROR([APRON not found.])])
+   AC_CHECK_FILE([$OCAMLLIB/curses],
+		 [CURSES=$OCAMLLIB/curses],
+		 [CURSES=ocaml-curses])
 fi
 
 AC_SUBST(CURSES,$CURSES)

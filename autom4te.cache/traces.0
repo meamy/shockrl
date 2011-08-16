@@ -146,81 +146,89 @@ m4trace:configure.ac:29: -1- m4_pattern_allow([^host_alias$])
 m4trace:configure.ac:29: -1- AC_SUBST([target_alias])
 m4trace:configure.ac:29: -1- AC_SUBST_TRACE([target_alias])
 m4trace:configure.ac:29: -1- m4_pattern_allow([^target_alias$])
-m4trace:configure.ac:43: -1- AC_SUBST([OCAMLC])
-m4trace:configure.ac:43: -1- AC_SUBST_TRACE([OCAMLC])
-m4trace:configure.ac:43: -1- m4_pattern_allow([^OCAMLC$])
-m4trace:configure.ac:43: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:43: the top level])
-m4trace:configure.ac:57: -1- AC_SUBST([OCAMLOPT])
-m4trace:configure.ac:57: -1- AC_SUBST_TRACE([OCAMLOPT])
-m4trace:configure.ac:57: -1- m4_pattern_allow([^OCAMLOPT$])
-m4trace:configure.ac:57: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:57: the top level])
-m4trace:configure.ac:71: -1- AC_SUBST([OCAMLCDOTOPT])
-m4trace:configure.ac:71: -1- AC_SUBST_TRACE([OCAMLCDOTOPT])
-m4trace:configure.ac:71: -1- m4_pattern_allow([^OCAMLCDOTOPT$])
-m4trace:configure.ac:71: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:71: the top level])
-m4trace:configure.ac:85: -1- AC_SUBST([OCAMLOPTDOTOPT])
-m4trace:configure.ac:85: -1- AC_SUBST_TRACE([OCAMLOPTDOTOPT])
-m4trace:configure.ac:85: -1- m4_pattern_allow([^OCAMLOPTDOTOPT$])
-m4trace:configure.ac:85: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:85: the top level])
-m4trace:configure.ac:99: -1- AC_SUBST([OCAMLDOC])
-m4trace:configure.ac:99: -1- AC_SUBST_TRACE([OCAMLDOC])
-m4trace:configure.ac:99: -1- m4_pattern_allow([^OCAMLDOC$])
-m4trace:configure.ac:99: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:99: the top level])
-m4trace:configure.ac:104: -1- AC_SUBST([OCAMLDEP])
-m4trace:configure.ac:104: -1- AC_SUBST_TRACE([OCAMLDEP])
-m4trace:configure.ac:104: -1- m4_pattern_allow([^OCAMLDEP$])
-m4trace:configure.ac:104: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
+m4trace:configure.ac:48: -1- AC_SUBST([OCAMLC])
+m4trace:configure.ac:48: -1- AC_SUBST_TRACE([OCAMLC])
+m4trace:configure.ac:48: -1- m4_pattern_allow([^OCAMLC$])
+m4trace:configure.ac:48: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:48: the top level])
+m4trace:configure.ac:62: -1- AC_SUBST([OCAMLOPT])
+m4trace:configure.ac:62: -1- AC_SUBST_TRACE([OCAMLOPT])
+m4trace:configure.ac:62: -1- m4_pattern_allow([^OCAMLOPT$])
+m4trace:configure.ac:62: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:62: the top level])
+m4trace:configure.ac:76: -1- AC_SUBST([OCAMLCDOTOPT])
+m4trace:configure.ac:76: -1- AC_SUBST_TRACE([OCAMLCDOTOPT])
+m4trace:configure.ac:76: -1- m4_pattern_allow([^OCAMLCDOTOPT$])
+m4trace:configure.ac:76: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:76: the top level])
+m4trace:configure.ac:90: -1- AC_SUBST([OCAMLOPTDOTOPT])
+m4trace:configure.ac:90: -1- AC_SUBST_TRACE([OCAMLOPTDOTOPT])
+m4trace:configure.ac:90: -1- m4_pattern_allow([^OCAMLOPTDOTOPT$])
+m4trace:configure.ac:90: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:90: the top level])
+m4trace:configure.ac:104: -1- AC_SUBST([OCAMLDOC])
+m4trace:configure.ac:104: -1- AC_SUBST_TRACE([OCAMLDOC])
+m4trace:configure.ac:104: -1- m4_pattern_allow([^OCAMLDOC$])
+m4trace:configure.ac:104: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
 configure.ac:104: the top level])
-m4trace:configure.ac:109: -1- AC_SUBST([OCAMLLEX])
-m4trace:configure.ac:109: -1- AC_SUBST_TRACE([OCAMLLEX])
-m4trace:configure.ac:109: -1- m4_pattern_allow([^OCAMLLEX$])
-m4trace:configure.ac:109: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
+m4trace:configure.ac:109: -1- AC_SUBST([OCAMLDEP])
+m4trace:configure.ac:109: -1- AC_SUBST_TRACE([OCAMLDEP])
+m4trace:configure.ac:109: -1- m4_pattern_allow([^OCAMLDEP$])
+m4trace:configure.ac:109: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
 configure.ac:109: the top level])
-m4trace:configure.ac:113: -1- AC_SUBST([OCAMLLEXDOTOPT])
-m4trace:configure.ac:113: -1- AC_SUBST_TRACE([OCAMLLEXDOTOPT])
-m4trace:configure.ac:113: -1- m4_pattern_allow([^OCAMLLEXDOTOPT$])
-m4trace:configure.ac:113: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:113: the top level])
-m4trace:configure.ac:119: -1- AC_SUBST([OCAMLYACC])
-m4trace:configure.ac:119: -1- AC_SUBST_TRACE([OCAMLYACC])
-m4trace:configure.ac:119: -1- m4_pattern_allow([^OCAMLYACC$])
-m4trace:configure.ac:119: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
-configure.ac:119: the top level])
-m4trace:configure.ac:124: -1- AC_SUBST([OCAMLMKLIB])
-m4trace:configure.ac:124: -1- AC_SUBST_TRACE([OCAMLMKLIB])
-m4trace:configure.ac:124: -1- m4_pattern_allow([^OCAMLMKLIB$])
-m4trace:configure.ac:124: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2764: AC_CHECK_FILE is expanded from...
-configure.ac:36: OFIND is expanded from...
+m4trace:configure.ac:114: -1- AC_SUBST([OCAMLLEX])
+m4trace:configure.ac:114: -1- AC_SUBST_TRACE([OCAMLLEX])
+m4trace:configure.ac:114: -1- m4_pattern_allow([^OCAMLLEX$])
+m4trace:configure.ac:114: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:114: the top level])
+m4trace:configure.ac:118: -1- AC_SUBST([OCAMLLEXDOTOPT])
+m4trace:configure.ac:118: -1- AC_SUBST_TRACE([OCAMLLEXDOTOPT])
+m4trace:configure.ac:118: -1- m4_pattern_allow([^OCAMLLEXDOTOPT$])
+m4trace:configure.ac:118: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:118: the top level])
+m4trace:configure.ac:124: -1- AC_SUBST([OCAMLYACC])
+m4trace:configure.ac:124: -1- AC_SUBST_TRACE([OCAMLYACC])
+m4trace:configure.ac:124: -1- m4_pattern_allow([^OCAMLYACC$])
+m4trace:configure.ac:124: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
 configure.ac:124: the top level])
-m4trace:configure.ac:130: -1- AC_CONFIG_FILES([Makefile.config])
-m4trace:configure.ac:130: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.ac:129: -1- AC_SUBST([OCAMLMKLIB])
+m4trace:configure.ac:129: -1- AC_SUBST_TRACE([OCAMLMKLIB])
+m4trace:configure.ac:129: -1- m4_pattern_allow([^OCAMLMKLIB$])
+m4trace:configure.ac:129: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:41: OFIND is expanded from...
+configure.ac:129: the top level])
+m4trace:configure.ac:140: -1- _m4_warn([cross], [cannot check for file existence when cross compiling], [../../lib/autoconf/general.m4:2765: AC_CHECK_FILE is expanded from...
+configure.ac:140: the top level])
+m4trace:configure.ac:145: -1- AC_SUBST([CURSES], [$CURSES])
+m4trace:configure.ac:145: -1- AC_SUBST_TRACE([CURSES])
+m4trace:configure.ac:145: -1- m4_pattern_allow([^CURSES$])
+m4trace:configure.ac:146: -1- AC_SUBST([CBMC], [$CBMC])
+m4trace:configure.ac:146: -1- AC_SUBST_TRACE([CBMC])
+m4trace:configure.ac:146: -1- m4_pattern_allow([^CBMC$])
+m4trace:configure.ac:149: -1- AC_CONFIG_FILES([Makefile.config])
+m4trace:configure.ac:149: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.ac:130: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
-m4trace:configure.ac:130: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.ac:130: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([LTLIBOBJS])
-m4trace:configure.ac:130: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([top_builddir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([top_build_prefix])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([srcdir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([abs_srcdir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([top_srcdir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([abs_top_srcdir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([builddir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([abs_builddir])
-m4trace:configure.ac:130: -1- AC_SUBST_TRACE([abs_top_builddir])
+m4trace:configure.ac:149: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
+m4trace:configure.ac:149: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:149: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([LTLIBOBJS])
+m4trace:configure.ac:149: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([top_builddir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([top_build_prefix])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([srcdir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([abs_srcdir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([top_srcdir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([abs_top_srcdir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([builddir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([abs_builddir])
+m4trace:configure.ac:149: -1- AC_SUBST_TRACE([abs_top_builddir])
