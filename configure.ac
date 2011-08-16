@@ -135,7 +135,7 @@ if test "$OCAMLMKLIB" = no; then
    fi
 fi
 
-# Check for APRON
+# Check for CURSES
 if test "$CURSES" = no ; then
    AC_CHECK_FILE([$OCAMLLIB/curses],
 		 [CURSES=$OCAMLLIB/curses],

@@ -1,11 +1,7 @@
+open Scanf;;
 open Curses;;
 
-module HT = Hashtbl.Make(struct
-                           type t = int
-                           let equal = (=)
-                           let hash = Hashtbl.hash
-                         end)
-
+(* Commands in the internal representation *)
 type command =
   | None
   | Left
@@ -20,12 +16,20 @@ type command =
   | Inventory
   | Use
 
+module HT = Hashtbl.Make(struct
+                           type t = int
+                           let equal = (=)
+                           let hash = Hashtbl.hash
+                         end)
+(* Stores the set of key mappings *)
 let key_map = HT.create 32
-
+              
+(* Lookup a keypress from curses "getch" *)
 let lookup key =
   try HT.find key_map key
   with Not_found -> None
 
+(* Default keybindings, incase the config file is missing *)
 let load_defaults () = 
   let defaults = [
     (Key.left, Left);
@@ -47,3 +51,15 @@ let load_defaults () =
     (int_of_char 'l', Right)]
   in
     List.iter (fun (key, cmd) -> HT.add key_map key cmd) defaults
+
+(* Loads the keybindings *)
+let load_bindings ic =
+  let parse_pair str1 str2 = begin
+      try HT.add (lookup_key str1) (lookup_cmd str2)
+      with Not_found -> ()
+    end
+
+  let parse_string str = 
+    if str = "[end]" then ()
+    else fscanf ic "%s" (parse_pair str)
+    fscanf ic "%s" parse_string
