@@ -29,6 +29,34 @@ let lookup key =
   try HT.find key_map key
   with Not_found -> None
 
+let lookup_key str = match str with
+  | "arrow_left"  -> Key.left
+	| "arrow_right" -> Key.right
+	| "arrow_up"    -> Key.up
+	| "arrow_down"  -> Key.down
+	| "escape"      -> 27
+	| "enter"       -> 10
+	| _             -> 
+	  if String.length str > 1 then
+		  raise Not_found
+		else 
+	    int_of_char (str.[0])
+
+let lookup_cmd str = match str with
+  | "left" -> Left
+	| "right" -> Right
+	| "up"    -> Up
+	| "down"  -> Down
+	| "save"   -> Save
+	| "quit"   -> Quit
+	| "attack" -> Attack
+	| "use"    -> Use
+	| "inventory" -> Inventory
+	| "accept"    -> Accept
+	| "cancel"    -> Cancel
+	| _           -> raise Not_found
+
+
 (* Default keybindings, incase the config file is missing *)
 let load_defaults () = 
   let defaults = [
@@ -55,11 +83,15 @@ let load_defaults () =
 (* Loads the keybindings *)
 let load_bindings ic =
   let parse_pair str1 str2 = begin
-      try HT.add (lookup_key str1) (lookup_cmd str2)
+      try HT.add key_map (lookup_key str1) (lookup_cmd str2)
       with Not_found -> ()
     end
-
-  let parse_string str = 
+  in
+  let rec parse_string str = 
     if str = "[end]" then ()
-    else fscanf ic "%s" (parse_pair str)
-    fscanf ic "%s" parse_string
+    else begin 
+		  fscanf ic "%s" (parse_pair str);
+      fscanf ic "%s" parse_string
+		end
+	in
+	  fscanf ic "%s" parse_string
