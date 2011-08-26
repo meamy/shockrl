@@ -1,11 +1,11 @@
-open Core;;
+open Err;;
 open Curses;;
 open Display;;
 
 let width = 30
 let height = 10
 
-let new_game () = ()
+let new_game () = Game.new_game ()
 let continue () = ()
 let instructions () = ()
 let credits () = ()
@@ -69,9 +69,9 @@ let init () =
   bootstrap_display ();
 
   (* config *)
-  (*Config.load ()*)
-  Cmd.load_defaults ()
+  Config.load_config ()
 
 let main =
   init ();
-  main_menu ()
+	try main_menu ()
+	with Curses_error -> failwith "Error displaying menu"

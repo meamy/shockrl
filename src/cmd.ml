@@ -22,7 +22,30 @@ module HT = Hashtbl.Make(struct
                            let hash = Hashtbl.hash
                          end)
 (* Stores the set of key mappings *)
-let key_map = HT.create 32
+let key_map = 
+  (* Default keybindings, incase the config file is missing *)
+  let defaults = [
+    (Key.left, Left);
+    (Key.right, Right);
+    (Key.up, Up);
+    (Key.down, Down);
+    (10, Accept);
+    (27, Cancel);
+    (int_of_char 'q', Quit);
+    (int_of_char 's', Save);
+    (int_of_char 'f', Attack);
+    (int_of_char 'i', Inventory);
+    (int_of_char 'u', Use);
+
+    (* Vikeys *)
+    (int_of_char 'k', Up);
+    (int_of_char 'j', Down);
+    (int_of_char 'h', Left);
+    (int_of_char 'l', Right)]
+  in
+	let map = HT.create 32 in
+    List.iter (fun (key, cmd) -> HT.add map key cmd) defaults;
+		map
               
 (* Lookup a keypress from curses "getch" *)
 let lookup key =
@@ -57,41 +80,20 @@ let lookup_cmd str = match str with
 	| _           -> raise Not_found
 
 
-(* Default keybindings, incase the config file is missing *)
-let load_defaults () = 
-  let defaults = [
-    (Key.left, Left);
-    (Key.right, Right);
-    (Key.up, Up);
-    (Key.down, Down);
-    (10, Accept);
-    (27, Cancel);
-    (int_of_char 'q', Quit);
-    (int_of_char 's', Save);
-    (int_of_char 'f', Attack);
-    (int_of_char 'i', Inventory);
-    (int_of_char 'u', Use);
-
-    (* Vikeys *)
-    (int_of_char 'k', Up);
-    (int_of_char 'j', Down);
-    (int_of_char 'h', Left);
-    (int_of_char 'l', Right)]
-  in
-    List.iter (fun (key, cmd) -> HT.add key_map key cmd) defaults
-
 (* Loads the keybindings *)
 let load_bindings ic =
-  let parse_pair str1 str2 = begin
-      try HT.add key_map (lookup_key str1) (lookup_cmd str2)
-      with Not_found -> ()
-    end
-  in
-  let rec parse_string str = 
-    if str = "[end]" then ()
-    else begin 
-		  fscanf ic "%s" (parse_pair str);
-      fscanf ic "%s" parse_string
-		end
+  let rec parse_pair str1 str2 = match str2 with
+	  | "[end]" | "" -> ()
+		| _ -> begin
+		    Log.debug ("Cmd: Binding '" ^ str1 ^ "' to '" ^ str2 ^ "'");
+				begin
+          try HT.add key_map (lookup_key str1) (lookup_cmd str2)
+          with Not_found -> ()
+			  end;
+        fscanf ic " %s " parse_string
+      end
+  and parse_string str = match str with
+	  | "[end]" | "" -> ()
+		| _ -> fscanf ic " %s " (parse_pair str)
 	in
-	  fscanf ic "%s" parse_string
+	  fscanf ic " %s " parse_string

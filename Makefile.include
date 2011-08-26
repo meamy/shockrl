@@ -13,8 +13,8 @@
 include $(ROOT)/Makefile.config
 include .depend
 
-UTIL_FILES = heap.ml
-CORE_FILES = core.ml cmd.ml display.ml
+UTIL_FILES = err.ml colour.ml heap.ml log.ml rand.ml
+CORE_FILES = level.ml cmd.ml config.ml display.ml game.ml
 
 SRC_DIR = $(ROOT)/src
 CURSES = $(ROOT)/ocaml-curses
