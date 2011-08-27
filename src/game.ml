@@ -12,4 +12,4 @@ let new_game () =
 		Display.bootstrap_hud ();
 	  Display.print_map map;
 		test ();
-		Display.close_hud ();
+		Display.close_hud ()
