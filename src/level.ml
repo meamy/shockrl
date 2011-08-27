@@ -48,7 +48,8 @@ module Tile = struct
 		    | true -> wattr_on win (A.color_pair tile.color)
 			  | false -> wattr_on win (A.color_pair Colour.white)
 			end;
-			wrap (mvwaddch win y x (int_of_char tile.typ))
+     try wrap (mvwaddch win y x (int_of_char tile.typ))
+     with Curses_error -> ()
 
 end
 
