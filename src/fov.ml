@@ -1,4 +1,10 @@
+open Util;;
 open Level;;
+
+module Itree = Itree.Make(struct
+                            type t = float
+														let compare = compare
+													end)
 
 (* Enumerate a list of numbers from low to high *)
 let number_list low high =
@@ -7,6 +13,22 @@ let number_list low high =
 		| false -> lst
 	in
 	  acc low high []
+
+(* Produce a line from (x, y) to (u, v) *)
+let los (x0, y0) (x1, y1) =
+  let (dx, dy) = (abs (x1 - x0), abs (y1 - y0)) in
+	let sx = if x0 < x1 then 1 else -1 in
+	let sy = if y0 < y1 then 1 else -1 in
+	let rec fold x0 y0 err lst =
+	  if (x0 = x1) && (y0 = y1) then
+		  (x0, y0)::lst
+		else
+			let e2 = 2 * err in
+			let cx = if e2 > -dy then 1 else 0 in
+			let cy = if e2 < dx then 1 else 0 in
+			  fold (x0 + cx*sx) (y0 + cy*sy) (err - cx*dy + cy*dx) ((x0, y0)::lst)
+	in
+	  fold x0 y0 (dx - dy) []
 
 (* Instead of iterating the whole map and setting not visible,
    only do the squares that could have possibly been visible *)

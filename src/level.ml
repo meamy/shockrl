@@ -1,22 +1,8 @@
-open Err;;
+open Util;;
 open Curses;;
 
 let map_width  = 80
 let map_height = 20
-
-type direction =
-  | N
-	| NE
-	| E
-	| SE
-	| S
-	| SW
-	| W
-	| NW
-
-type position = {
-  mutable x : int;
-	mutable y : int }
 
 module Tile = struct
   type t = {
@@ -75,16 +61,13 @@ module Map : sig
 	val height : t -> int
 	val width : t -> int
 	val get_tile : t -> int -> int -> tile
-	val get_position : t -> position
-	val move_position : t -> direction -> unit
-  val print : t -> window -> unit
+  val print : t -> window -> (int * int) -> unit
 end = struct
   type tile = Tile.t
   type t = {
 	  a : tile array array;
 		height : int;
-		width  : int;
-		pos    : position }
+		width  : int }
 
 	exception Out_of_bounds
 
@@ -92,21 +75,10 @@ end = struct
 	  if (x < 0 || x >= map.width) || (y <  0 || y >= map.height) then
 		  raise Out_of_bounds
 
-	let rec transform_pos pos dir = match dir with
-	  | N ->  (pos.x,     pos.y - 1)
-	  | NE -> (pos.x + 1, pos.y - 1)
-		| E ->  (pos.x + 1, pos.y)
-		| SE -> (pos.x + 1, pos.y + 1) 
-		| S ->  (pos.x,     pos.y + 1) 
-		| SW -> (pos.x - 1, pos.y + 1) 
-		| W ->  (pos.x - 1, pos.y)
-	  | NW -> (pos.x - 1, pos.y - 1)
-
   let create ?(height = map_height) ?(width = map_width) () =  {
 	  a = Array.init width (fun _ -> Array.init height Tile.unit);
 		height = height;
-		width = width;
-		pos = {x = 0; y = 0 } }
+		width = width }
 	
 	let height map = map.height
 	let width map = map.width
@@ -115,24 +87,12 @@ end = struct
 	  check_bounds map x y;
 		map.a.(x).(y)
 	
-	let get_position map = map.pos
-
-	let move_position map dir = 
-	  let pos = map.pos in
-	  let (x, y) = transform_pos pos dir in
-	    try
-			  let tile = get_tile map x y in
-				  if Tile.is_blocked tile then ()
-					else
-					  Tile.unblock (get_tile map pos.x pos.y);
-						Tile.block tile;
-						pos.x <- x;
-						pos.y <- y
-			with Out_of_bounds -> ()
-
-	let print map win = 
-	  let f x y tile = Tile.print tile x y win in
-	    Array.iteri (fun x a -> Array.iteri (f x) a) map.a;
-			ignore (mvwaddch win map.pos.y map.pos.x (int_of_char '@'));
-			wrap (wnoutrefresh win)
+	let print map win (x0, y0) = 
+	  for i = 0 to Config.view_width - 1 do
+		  for j = 0 to Config.view_height - 1 do
+		    Log.debug ((string_of_int (x0 + i)) ^ (string_of_int (y0 + j)));
+				Tile.print (get_tile map (x0 + i) (y0 + j)) i j win
+			done
+		done;
+		wrap (wnoutrefresh win)
 end

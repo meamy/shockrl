@@ -1,14 +1,15 @@
-open Err;;
+open Util;;
 open Curses;; 
- 
-let red = 1
-let green = 2
-let yellow = 3
-let blue = 4
+
+(* Colour definitions *)
+let red     = 1
+let green   = 2
+let yellow  = 3
+let blue    = 4
 let magenta = 5
-let cyan = 6
-let white = 7
-let gray = 8
+let cyan    = 6
+let white   = 7
+let gray    = 8
 
 let init_colours () =
   if not (has_colors ()) then begin

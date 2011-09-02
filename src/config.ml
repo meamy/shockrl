@@ -1,6 +1,14 @@
 open Scanf;;
 
 let debug = ref true
+let log_size = ref 100
+
+let dialogue_height = 2
+let dialogue_width  = 80
+let view_height     = 20
+let view_width      = 80
+let status_height   = 2
+let status_width    = 80
 
 let config_file = "config.ini"
 

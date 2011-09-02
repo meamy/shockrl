@@ -1,32 +1,34 @@
 open Level;;
+open Actor;;
 open Curses;;
-open Err;;
+open Util;;
 
 let new_game () =
-	let map = Map.create () in
+	let map = Map.create ~height:40 ~width:80 () in
+	let p1 = new player map 0 0 in
 	let rec test () = 
-	  Display.print_map map;
+	  Display.print_map map p1 (p1#view_offset ());
 	  match Cmd.lookup (getch ()) with
 	    | Cmd.Cancel -> ()
 		  | Cmd.Up -> 
-			    Fov.reset_fov map (Map.get_position map) 10;
-		      Map.move_position map N;
-					Fov.calculate_fov map (Map.get_position map) 10;
+			    Fov.reset_fov map p1#get_pos 10;
+		      p1#move N;
+					Fov.calculate_fov map p1#get_pos 10;
 			  	test ()
 		  | Cmd.Down -> 
-			    Fov.reset_fov map (Map.get_position map) 10;
-		      Map.move_position map S;
-					Fov.calculate_fov map (Map.get_position map) 10;
+			    Fov.reset_fov map p1#get_pos 10;
+		      p1#move S;
+					Fov.calculate_fov map p1#get_pos 10;
 			  	test ()
 			| Cmd.Left ->
-			    Fov.reset_fov map (Map.get_position map) 10;
-			    Map.move_position map W;
-					Fov.calculate_fov map (Map.get_position map) 10;
+			    Fov.reset_fov map p1#get_pos 10;
+			    p1#move W;
+					Fov.calculate_fov map p1#get_pos 10;
 					test ()
 			| Cmd.Right ->
-			    Fov.reset_fov map (Map.get_position map) 10;
-			    Map.move_position map E;
-					Fov.calculate_fov map (Map.get_position map) 10;
+			    Fov.reset_fov map p1#get_pos 10;
+			    p1#move E;
+					Fov.calculate_fov map p1#get_pos 10;
 					test ()
 		  | _ -> test ()
 	in

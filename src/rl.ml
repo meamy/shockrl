@@ -1,4 +1,4 @@
-open Err;;
+open Util;;
 open Curses;;
 open Display;;
 

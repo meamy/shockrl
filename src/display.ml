@@ -1,19 +1,12 @@
-open Err;;
+open Util;;
 open Curses;;
 open Level;;
-
-let dialogue_height = 2
-let dialogue_width  = 80
-let view_height     = 20
-let view_width      = 80
-let status_height   = 2
-let status_width    = 80
+open Actor;;
+open Config;;
 
 let dialogue_win = ref null_window
 let view_win     = ref null_window
 let status_win   = ref null_window
-
-let messages = Array.make 2 ""
 
 let bootstrap_display () =
   try
@@ -52,23 +45,10 @@ let close_hud () =
 		          [dialogue_win; view_win; status_win];
 		wrap (doupdate ())
 
-let print_messages () =
-  let f i str = wrap (mvwaddstr !dialogue_win i 0 str) in
-    try 
-      Array.iteri f messages;
-      wrap (wrefresh !dialogue_win)
-    with Curses_error -> ()
-
-
-let add_message str =
-  Log.log messages.(1);
-  messages.(1) <- messages.(0);
-  messages.(0) <- str;
-  print_messages ()
-
-let print_map map =
+let print_map map player off =
   if !view_win = null_window then
 	  failwith "HUD not initialized";
-  try Map.print map !view_win;
+  try Map.print map !view_win off;
+	    player#print !view_win;
 	    wrap (doupdate ())
 	with Curses_error -> failwith "Error displaying map"

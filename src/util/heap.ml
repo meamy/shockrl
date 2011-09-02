@@ -1,3 +1,5 @@
+(* Pairing heaps *)
+
 module Make(M : Map.OrderedType) = struct
   type key = M.t
 	type 'a pairHeap = 
