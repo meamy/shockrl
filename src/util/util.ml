@@ -18,6 +18,12 @@ type direction =
 	| W
 	| NW
 
+(* Properties *)
+let blocked  = 0x01
+let mapped   = 0x01 lsl 1
+let opaque   = 0x01 lsl 2
+let visible  = 0x01 lsl 3
+
 (* Wrap curses commands to produce an exeception on error *)
 let wrap b = match b with
   | true -> ()

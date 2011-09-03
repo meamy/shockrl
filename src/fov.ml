@@ -37,7 +37,7 @@ let reset_fov map pos draw_dist =
 	    min (Map.width map - 1) (pos.x + draw_dist) do
 	  for j = max 0 (pos.y - draw_dist) to 
 		    min (Map.height map - 1) (pos.y + draw_dist) do
-		  Tile.make_invisible (Map.get_tile map i j)
+		  Tile.unset visible (Map.get_tile map i j)
 		done
 	done 
 
@@ -69,9 +69,9 @@ let calculate_fov map pos draw_dist =
 		  if (sqrt (x2 ** 2.0 +. y2 ** 2.0)) <= (float_of_int draw_dist) then begin
 			  (* We check to see if any angle is visible, and make it visible *)
 				if List.exists (fun x -> not (Itree.mem x itree)) [s1; s2; s3; s4; s5] then
-				  Tile.make_visible tile;
+				  Tile.set (visible lor mapped) tile;
 				(* If the tile is opaque, add it to the block list *)
-			  if Tile.is_opaque tile then Itree.add (lft, rht) itree
+			  if Tile.is opaque tile then Itree.add (lft, rht) itree
 				else itree
 			end else itree
   in

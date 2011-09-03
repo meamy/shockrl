@@ -25,12 +25,13 @@ class virtual actor = object
 	  let (x, y) =  get_coords pos.x pos.y dir in
 		  try
 			  let tile = Map.get_tile map_ref x y in
-				  if Tile.is_blocked tile then ()
-					else
-					  Tile.unblock (Map.get_tile map_ref pos.x pos.y);
-						Tile.block tile;
+				  if Tile.is blocked tile then ()
+					else begin
+					  Tile.unset blocked (Map.get_tile map_ref pos.x pos.y);
+						Tile.set blocked tile;
 						pos.x <- x;
 						pos.y <- y
+					end
 			with Map.Out_of_bounds -> ()
 
 	method print win =
@@ -63,6 +64,6 @@ class player map x y = object (s)
 	method print win =
 	  let ch = int_of_char (get_char typ) in
 		let (x, y) = s#view_offset () in
-		  wrap (mvwaddch win (pos.y - y) (pos.x - x) ch);
-			wrap (wnoutrefresh win)
+		  ignore (mvwaddch win (pos.y - y) (pos.x - x) ch);
+			ignore (wnoutrefresh win)
 end

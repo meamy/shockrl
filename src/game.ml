@@ -9,7 +9,10 @@ let new_game () =
 	let rec test () = 
 	  Display.print_map map p1 (p1#view_offset ());
 	  match Cmd.lookup (getch ()) with
-	    | Cmd.Cancel -> ()
+	    | Cmd.Quit ->
+			    let str = String.lowercase (Console.read "Exit?") in
+			      if (str = "y") || (str = "yes") then ()
+						else test ()
 		  | Cmd.Up -> 
 			    Fov.reset_fov map p1#get_pos 10;
 		      p1#move N;
@@ -34,7 +37,6 @@ let new_game () =
 	in
 	  flushinp ();
 		Display.bootstrap_hud ();
-		Tile.set_wall (Map.get_tile map 20 10);
-		Tile.set_opaque (Map.get_tile map 20 10);
+		Tile.assign (Map.get_tile map 20 10) Tile.wall;
 		test ();
 		Display.close_hud ()

@@ -22,6 +22,7 @@ let init_colours () =
     wrap (init_pair yellow Color.yellow Color.black);
     wrap (init_pair blue Color.blue Color.black);
     wrap (init_pair magenta Color.magenta Color.black);
-    wrap (init_pair white Color.white Color.black)
+    wrap (init_pair white Color.white Color.black);
+    wrap (init_pair gray Color.black Color.black);
   with
     Curses_error -> failwith "Error initializing colours"

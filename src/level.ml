@@ -10,44 +10,41 @@ module Tile = struct
     mutable properties : int;
 	  mutable color : int }
 
-	(* Properties *)
-  let blocked  = 0x01
-  let mapped   = 0x01 lsl 1
-  let opaque   = 0x01 lsl 2
-  let visible  = 0x01 lsl 3
+  (* Most basic tile *)
+	let unit  = { typ = ' '; properties = 0; color = Colour.gray }
 
-	let unit _ = {
-	  typ = '.';
-		properties = mapped;
-		color = Colour.red }
+	(* Terrain types and their base properties *)
+	let floor = ( '.', 0, Colour.white)
+	let wall  = ( '#', blocked lor opaque, Colour.white)
 
+  let make (typ, prop, color) = { typ = typ; properties = prop; color = color }
 
-	let is_blocked tile = (tile.properties land blocked) != 0
-	let is_mapped  tile = (tile.properties land mapped)  != 0
-	let is_opaque  tile = (tile.properties land opaque)  != 0
-	let is_visible tile = (tile.properties land visible) != 0
+  (* Returns a fresh copy of a tile *)
+  let copy tile = 
+	  { typ = tile.typ; properties = tile.properties; color = tile.color }
 
-	let block   tile = tile.properties <- tile.properties lor blocked
-	let unblock tile = tile.properties <- tile.properties land (lnot blocked)
+  (* Assign a tile to a certain terrain type *)
+	let assign tile (typ, prop, color) =
+	  tile.typ <- typ;
+		tile.properties <- prop;
+		tile.color <- color
 
-	let make_visible   tile = tile.properties <- tile.properties lor visible
-	let make_invisible tile = tile.properties <- tile.properties land (lnot visible)
-
-	let set_blocked tile = tile.properties <- tile.properties lor blocked
-	let set_mapped tile  = tile.properties <- tile.properties lor mapped
-	let set_opaque tile  = tile.properties <- tile.properties lor opaque
-	let set_visible tile = tile.properties <- tile.properties lor visible
-
-	let set_wall tile = tile.typ <- '#'
+  (* Properties utilities *)
+	let is prop tile = (tile.properties land prop) != 0
+	let set prop tile   = tile.properties <- tile.properties lor prop
+	let unset prop tile = tile.properties <- tile.properties land (lnot prop)
 
 	let print tile x y win =
-	  if (is_mapped tile) then begin
-		  match (is_visible tile) with
-		    | true -> wattr_on win (A.color_pair tile.color)
-			  | false -> wattr_on win (A.color_pair Colour.white)
-			end;
-     try wrap (mvwaddch win y x (int_of_char tile.typ))
-     with Curses_error -> ()
+	  if (is mapped tile) then 
+		  begin
+			  begin match (is visible tile) with
+		      | true -> wattr_on win (A.color_pair tile.color)
+			    | false -> wattr_on win (A.bold lor A.color_pair Colour.gray)
+				end;
+        ignore (mvwaddch win y x (int_of_char tile.typ))
+		  end
+		else
+		  ignore (mvwaddch win y x (int_of_char  ' '))
 
 end
 
@@ -75,10 +72,11 @@ end = struct
 	  if (x < 0 || x >= map.width) || (y <  0 || y >= map.height) then
 		  raise Out_of_bounds
 
-  let create ?(height = map_height) ?(width = map_width) () =  {
-	  a = Array.init width (fun _ -> Array.init height Tile.unit);
-		height = height;
-		width = width }
+  let create ?(height = map_height) ?(width = map_width) () =  
+	  let f _ = Array.init height (fun _ -> Tile.make Tile.floor) in
+	    { a = Array.init width f;
+		    height = height;
+		    width = width }
 	
 	let height map = map.height
 	let width map = map.width
@@ -90,7 +88,6 @@ end = struct
 	let print map win (x0, y0) = 
 	  for i = 0 to Config.view_width - 1 do
 		  for j = 0 to Config.view_height - 1 do
-		    Log.debug ((string_of_int (x0 + i)) ^ (string_of_int (y0 + j)));
 				Tile.print (get_tile map (x0 + i) (y0 + j)) i j win
 			done
 		done;
