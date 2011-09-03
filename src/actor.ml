@@ -55,8 +55,8 @@ class player map x y = object (s)
 		in
 		let wd = Config.view_width / 2 in
 		let ht = Config.view_height / 2 in
-		  (get_low_coord pos.x 0 (Map.width  map - 1) wd (Config.view_width  - wd - 1),
-		   get_low_coord pos.y 0 (Map.height map - 1) ht (Config.view_height - ht - 1))
+		  (get_low_coord pos.x 0 (Map.width  map_ref - 1) wd (Config.view_width  - wd - 1),
+		   get_low_coord pos.y 0 (Map.height map_ref - 1) ht (Config.view_height - ht - 1))
 			  
 
 	method fov () = Fov.calculate_fov map pos 8
