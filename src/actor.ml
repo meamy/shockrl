@@ -34,9 +34,9 @@ class virtual actor = object
 					end
 			with Map.Out_of_bounds -> ()
 
-	method print win =
+	method print win (x0, y0) =
 	  let ch = int_of_char (get_char typ) in
-		  wrap (mvwaddch win pos.y pos.x ch);
+		  wrap (mvwaddch win (pos.y - y0) (pos.x - x0) ch);
 			wrap (wnoutrefresh win)
 
 end
@@ -60,10 +60,4 @@ class player map x y = object (s)
 			  
 
 	method fov () = Fov.calculate_fov map pos 8
-			  
-	method print win =
-	  let ch = int_of_char (get_char typ) in
-		let (x, y) = s#view_offset () in
-		  ignore (mvwaddch win (pos.y - y) (pos.x - x) ch);
-			ignore (wnoutrefresh win)
 end

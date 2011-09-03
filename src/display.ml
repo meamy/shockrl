@@ -45,10 +45,11 @@ let close_hud () =
 		          [dialogue_win; view_win; status_win];
 		wrap (doupdate ())
 
-let print_map map player off =
+let print_map map player =
+  let off = player#view_offset () in
   if !view_win = null_window then
 	  failwith "HUD not initialized";
   try Map.print map !view_win off;
-	    player#print !view_win;
+	    player#print !view_win off;
 	    wrap (doupdate ())
 	with Curses_error -> failwith "Error displaying map"

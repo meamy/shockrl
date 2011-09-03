@@ -30,16 +30,16 @@ let read str =
   let win = !Display.dialogue_win in
   let rec acc len lst = match getch () with
 	  | 10 -> List.fold_left (fun str ch -> (ch ^ str)) "" lst
-		| 127  -> begin match lst with
-		  | [] -> acc len lst
-			| hd::tl ->
-			  ignore (waddch win 8);
-				ignore (waddch win (int_of_char ' '));
-				ignore (wechochar win 8);
-				acc (len - 1) tl
-			end
 		| x -> 
-		  if len < (Config.dialogue_width - 1) then
+      if x = Key.backspace then begin match lst with
+        | [] -> acc len lst
+        | hd::tl ->
+			    ignore (waddch win 8);
+				  ignore (waddch win (int_of_char ' '));
+				  ignore (wechochar win 8);
+				  acc (len - 1) tl
+			  end
+      else if len < (Config.dialogue_width - 1) then
 			  try
           ignore (wechochar win x);
 				  acc (len + 1) ((Char.escaped (char_of_int x))::lst)

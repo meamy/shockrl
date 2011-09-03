@@ -2,7 +2,17 @@ open Curses;;
 open Util;;
 open Level;;
 
-class virtual obj = object
+class type virtual obj_type = object
+  val virtual mutable state : char
+  val virtual pos : position
+  val virtual map_ref : Level.Map.t
+  val virtual properties : int
+
+  method virtual interact : Actor.actor -> unit
+  method print : Curses.window -> int * int -> unit
+end
+
+class virtual obj : obj_type = object
   val virtual mutable state : char
   val virtual pos : position
 	val virtual map_ref : Map.t

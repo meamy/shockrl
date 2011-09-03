@@ -7,7 +7,7 @@ let new_game () =
 	let map = Map.create ~height:40 ~width:80 () in
 	let p1 = new player map 0 0 in
 	let rec test () = 
-	  Display.print_map map p1 (p1#view_offset ());
+	  Display.print_map map p1;
 	  match Cmd.lookup (getch ()) with
 	    | Cmd.Quit ->
 			    let str = String.lowercase (Console.read "Exit?") in
