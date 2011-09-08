@@ -16,6 +16,7 @@ let get_char typ = match typ with
 
 class virtual actor = object
   val virtual typ : actor_typ
+	val virtual mutable attr : int
   val virtual pos : position
 	val virtual mutable map_ref : Map.t
 
@@ -36,14 +37,16 @@ class virtual actor = object
 
 	method print win (x0, y0) =
 	  let ch = int_of_char (get_char typ) in
-		  wrap (mvwaddch win (pos.y - y0) (pos.x - x0) ch);
-			wrap (wnoutrefresh win)
+		let tile = Map.get_tile map_ref pos.x pos.y in
+		  Tile.print_ch win tile (pos.x - x0) (pos.y - y0) ch attr;
+			ignore (wnoutrefresh win)
 
 end
 
 class player map x y = object (s)
-  inherit actor
+  inherit actor as super
 	val typ = Player
+	val mutable attr = A.color_pair Colour.white
 	val pos = { x = x; y = y }
 	val mutable map_ref = map
 
@@ -59,5 +62,22 @@ class player map x y = object (s)
 		   get_low_coord pos.y 0 (Map.height map_ref - 1) ht (Config.view_height - ht - 1))
 			  
 
-	method fov () = Fov.calculate_fov map pos 8
+  method reset_fov () = Fov.reset_fov map_ref pos 8
+	method set_fov ()   = ignore (Fov.set_fov map_ref pos 8)
+
+	method print_los win (x0, y0) (x, y) =
+	  let los = Fov.los (pos.x, pos.y) (x, y) in
+		let rec f lst = match lst with
+		  | [] -> ()
+			| (x, y)::tl ->
+			  ignore (mvwaddch win (y - y0) (x - x0) (int_of_char '*'));
+				f tl
+		in
+		  f los;
+			ignore (wrefresh win)
+
+	method move dir =
+	  s#reset_fov ();
+		super#move dir;
+		s#set_fov ()
 end

@@ -2,6 +2,7 @@ open Util;;
 open Curses;;
 open Level;;
 open Actor;;
+open Object;;
 open Config;;
 
 let dialogue_win = ref null_window
@@ -45,11 +46,13 @@ let close_hud () =
 		          [dialogue_win; view_win; status_win];
 		wrap (doupdate ())
 
-let print_map map player =
+let print_map map player lst =
   let off = player#view_offset () in
+	let rec print_objs lst = List.iter (fun obj -> obj#print !view_win off;) lst in
   if !view_win = null_window then
 	  failwith "HUD not initialized";
-  try Map.print map !view_win off;
+  try Map.print !view_win map off;
+	    print_objs lst;
 	    player#print !view_win off;
 	    wrap (doupdate ())
 	with Curses_error -> failwith "Error displaying map"

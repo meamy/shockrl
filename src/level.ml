@@ -4,65 +4,110 @@ open Curses;;
 let map_width  = 80
 let map_height = 20
 
-module Tile = struct
+let default_attr = A.bold lor A.color_pair Colour.gray
+
+(* ------------------- Tile *)
+module type Tile_type = sig
+  type t
+	type terrain =
+	  | Empty
+		| Floor
+		| Wall
+	
+	val copy     : t -> t
+	val make     : terrain -> t
+	val assign   : t -> terrain -> unit
+
+	val is       : int -> t -> bool
+	val set      : int -> t -> unit
+	val unset    : int -> t -> unit
+
+	val print    : Curses.window -> t -> int -> int -> unit
+	val print_ch : Curses.window -> t -> int -> int -> int -> int -> unit
+end
+
+
+module Tile : Tile_type = struct
   type t = {
     mutable typ : char;
     mutable properties : int;
-	  mutable color : int }
-
-  (* Most basic tile *)
-	let unit  = { typ = ' '; properties = 0; color = Colour.gray }
-
-	(* Terrain types and their base properties *)
-	let floor = ( '.', 0, Colour.white)
-	let wall  = ( '#', blocked lor opaque, Colour.white)
-
-  let make (typ, prop, color) = { typ = typ; properties = prop; color = color }
+	  mutable attr : int }
+	
+	type terrain =
+	  | Empty
+	  | Floor
+		| Wall
+	
+	let lookup_terrain terrain = match terrain with
+	  | Empty  -> (' ', 0, A.color_pair Colour.gray)
+	  | Floor  -> ('.', 0, A.color_pair Colour.white)
+		| Wall   -> ('#', blocked lor opaque, A.color_pair Colour.white)
 
   (* Returns a fresh copy of a tile *)
   let copy tile = 
-	  { typ = tile.typ; properties = tile.properties; color = tile.color }
+	  { typ = tile.typ; properties = tile.properties; attr = tile.attr }
 
+	(* Terrain types and their base properties *)
+  let make terrain = 
+	  let (typ, prop, attr) = lookup_terrain terrain in
+		  { typ = typ; properties = prop; attr = attr }
+	
   (* Assign a tile to a certain terrain type *)
-	let assign tile (typ, prop, color) =
-	  tile.typ <- typ;
-		tile.properties <- prop;
-		tile.color <- color
+	let assign tile terrain =
+	  let (typ, prop, attr) = lookup_terrain terrain in
+	    tile.typ <- typ;
+		  tile.properties <- prop;
+		  tile.attr <- attr
 
   (* Properties utilities *)
-	let is prop tile = (tile.properties land prop) != 0
+	let is prop tile    = (tile.properties land prop) != 0
 	let set prop tile   = tile.properties <- tile.properties lor prop
 	let unset prop tile = tile.properties <- tile.properties land (lnot prop)
 
-	let print tile x y win =
+  (* Printing utilities *)
+	let print_internal win tile x y ch attr =
+	  let ch = match ch with
+		  | None -> int_of_char tile.typ
+			| Some x -> x
+		in
+	  let attr = match attr with
+		  | None -> tile.attr
+			| Some x -> x
+		in
 	  if (is mapped tile) then 
 		  begin
 			  begin match (is visible tile) with
-		      | true -> wattr_on win (A.color_pair tile.color)
-			    | false -> wattr_on win (A.bold lor A.color_pair Colour.gray)
+		      | true -> wattrset win attr
+			    | false -> wattrset win default_attr
 				end;
-        ignore (mvwaddch win y x (int_of_char tile.typ))
+        ignore (mvwaddch win y x ch)
 		  end
 		else
 		  ignore (mvwaddch win y x (int_of_char  ' '))
-
+	let print win tile x y = print_internal win tile x y None None
+	let print_ch win tile x y ch attr = 
+	  print_internal win tile x y (Some ch) (Some attr)
 end
 
-module Map : sig
+(* -------------------------- Map *)
+module type Map_type = sig
   type t
 	type tile = Tile.t
 
 	exception Out_of_bounds
 
-	val create : ?height:int -> ?width:int -> unit -> t
-	val height : t -> int
-	val width : t -> int
+	val create   : ?height:int -> ?width:int -> unit -> t
+	val height   : t -> int
+	val width    : t -> int
+
 	val get_tile : t -> int -> int -> tile
-  val print : t -> window -> (int * int) -> unit
-end = struct
+	val print    : Curses.window -> t -> int * int -> unit
+end
+
+module Map : Map_type = struct
   type tile = Tile.t
   type t = {
-	  a : tile array array;
+	  a      : tile array array;
 		height : int;
 		width  : int }
 
@@ -73,7 +118,7 @@ end = struct
 		  raise Out_of_bounds
 
   let create ?(height = map_height) ?(width = map_width) () =  
-	  let f _ = Array.init height (fun _ -> Tile.make Tile.floor) in
+	  let f _ = Array.init height (fun _ -> Tile.make Tile.Floor) in
 	    { a = Array.init width f;
 		    height = height;
 		    width = width }
@@ -85,10 +130,10 @@ end = struct
 	  check_bounds map x y;
 		map.a.(x).(y)
 	
-	let print map win (x0, y0) = 
+	let print win map (x0, y0) = 
 	  for i = 0 to Config.view_width - 1 do
 		  for j = 0 to Config.view_height - 1 do
-				Tile.print (get_tile map (x0 + i) (y0 + j)) i j win
+				Tile.print win (get_tile map (x0 + i) (y0 + j)) i j
 			done
 		done;
 		wrap (wnoutrefresh win)

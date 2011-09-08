@@ -42,7 +42,7 @@ let reset_fov map pos draw_dist =
 	done 
 
 (* Cross between precise shadowcasting and permissive fov *)
-let calculate_fov map pos draw_dist = 
+let set_fov map pos draw_dist = 
   let x_0 = (float_of_int pos.x) +. 0.5 in
 	let y_0 = (float_of_int pos.y) +. 0.5 in
 
