@@ -7,7 +7,7 @@ let map_height = 20
 let default_attr = A.bold lor A.color_pair Colour.gray
 
 (* ------------------- Tile *)
-module type Tile_type = sig
+module type TILE_TYPE = sig
   type t
 	type terrain =
 	  | Empty
@@ -90,8 +90,11 @@ module Tile : Tile_type = struct
 end
 
 (* -------------------------- Map *)
-module type Map_type = sig
+module type MAP_TYPE = sig
   type t
+	type actor
+	type obj
+	type item
 	type tile = Tile.t
 
 	exception Out_of_bounds
