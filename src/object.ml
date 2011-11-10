@@ -2,65 +2,45 @@ open Curses;;
 open Util;;
 open Level;;
 
-module type OBJ_TYPE = sig
-  type map
-  class type virtual obj_type = object
-    val virtual mutable state : char
-    val virtual pos : position
-    val virtual map_ref : map
-    val virtual properties : int
-	  val virtual mutable attr : int
+type obj_typ =
+  | Door
 
-    method virtual interact : Actor.actor -> unit
-    method print : Curses.window -> int * int -> unit
-  end
+let lookup_obj typ = match typ with
+  | Door -> (('+', A.color_pair Colour.yellow), blocked lor opaque)
 
-	class obj : obj_type
+class virtual obj = object
+  inherit Abstract.obj
+	val virtual typ : obj_typ
+	val virtual mutable look : look
+  val virtual pos : position
+  val virtual mutable properties : int
+  val virtual map_ref : Map.t
+
+  method virtual interact : unit -> unit
+  method print win (x0, y0) =
+	  let tile = Map.get_tile map_ref pos.x pos.y in
+	    Tile.print_look win tile (pos.x - x0) (pos.y - y0) look;
+		  wrap (wnoutrefresh win)
+
+	method get_look () = look
+	method get_properties () = properties
 end
 
-module Make ( Map : MAP_TYPE ) : (OBJ_TYPE with map = Map.t) = struct
-  type map = Map.t
-  class type virtual obj_type = object
-    val virtual mutable state : char
-    val virtual pos : position
-    val virtual map_ref : map
-    val virtual properties : int
-	  val virtual mutable attr : int
+class door map x y = object
+  inherit obj
+	val typ = Door
+	val mutable look = ('+', A.color_pair Colour.yellow)
+  val pos = { x = x; y = y }
+  val mutable properties = blocked lor opaque
+  val map_ref = map
 
-    method virtual interact : Actor.actor -> unit
-    method print : Curses.window -> int * int -> unit
-  end
-
-  class virtual obj : obj_type = object
-    val virtual mutable state : char
-    val virtual pos : position
-	  val virtual map_ref : map
-	  val virtual properties : int
-	  val virtual mutable attr : int
-
-	  method virtual interact : Actor.actor -> unit
-	  method print win (x0, y0) =
-	    let ch = int_of_char state in
-		  let tile = Map.get_tile map_ref pos.x pos.y in
-		    Tile.print_ch win tile (pos.x - x0) (pos.y - y0) ch attr;
-			  wrap (wnoutrefresh win)
-  end
-
-  class door map x y = object
-    inherit obj
-	  val mutable state = '+'
-	  val pos = { x = x; y = y }
-	  val map_ref = map
-	  val properties = blocked lor opaque
-	  val mutable attr = A.color_pair Colour.yellow
-
-	  method interact _ = 
-	    if state = '+' then begin
-		    state <- '/';
+  method interact () = 
+	  let (state, attr) = look in
+      if state = '+' then begin
+	      look <- ('/', attr);
         Tile.unset properties (Map.get_tile map_ref x y)
-		  end
-	
-	  initializer
-	    Tile.set properties (Map.get_tile map_ref x y)
-  end
+	    end
+
+  initializer
+    Tile.set properties (Map.get_tile map_ref x y)
 end

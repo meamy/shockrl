@@ -9,7 +9,7 @@ let new_game () =
 	let p1 = new player map 0 0 in
 	let d1 = new door map 21 10 in
 	let rec test () = 
-	  Display.print_map map p1 (d1::[]);
+	  Display.print_map map p1;
 	  match Cmd.lookup (getch ()) with
 	    | Cmd.Quit ->
 			    let str = String.lowercase (Console.read "Exit?") in
@@ -31,7 +31,8 @@ let new_game () =
 	in
 	  flushinp ();
 		Display.bootstrap_hud ();
-		Tile.assign (Map.get_tile map 20 10) Tile.Wall;
+		Tile.assign (Map.get_tile map 20 10) Wall;
+		Tile.place (Map.get_tile map 21 10) (d1 :> Abstract.obj);
 		p1#reset_fov ();
 		p1#set_fov ();
 		test ();

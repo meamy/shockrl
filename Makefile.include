@@ -14,7 +14,7 @@ include $(ROOT)/Makefile.config
 include .depend
 
 UTIL_FILES = util.ml colour.ml heap.ml log.ml rand.ml itree.ml
-CORE_FILES = cmd.ml config.ml level.ml fov.ml actor.ml object.ml display.ml console.ml game.ml
+CORE_FILES = cmd.ml config.ml abstract.ml level.ml fov.ml actor.ml object.ml display.ml console.ml game.ml
 
 SRC_DIR = $(ROOT)/src
 CURSES = $(ROOT)/ocaml-curses

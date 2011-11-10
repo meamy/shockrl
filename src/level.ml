@@ -9,92 +9,83 @@ let default_attr = A.bold lor A.color_pair Colour.gray
 (* ------------------- Tile *)
 module type TILE_TYPE = sig
   type t
-	type terrain =
-	  | Empty
-		| Floor
-		| Wall
-	
-	val copy     : t -> t
+
 	val make     : terrain -> t
 	val assign   : t -> terrain -> unit
+	val place    : t -> Abstract.obj -> unit
 
 	val is       : int -> t -> bool
 	val set      : int -> t -> unit
 	val unset    : int -> t -> unit
 
-	val print    : Curses.window -> t -> int -> int -> unit
-	val print_ch : Curses.window -> t -> int -> int -> int -> int -> unit
+	val interact : t -> unit
+
+	val print_look : Curses.window -> t -> int -> int -> look -> unit
+	val print      : Curses.window -> t -> int -> int -> unit
 end
 
 
-module Tile : Tile_type = struct
+module Tile : TILE_TYPE = struct
   type t = {
-    mutable typ : char;
+    mutable typ        : terrain;
+		mutable look       : look;
     mutable properties : int;
-	  mutable attr : int }
-	
-	type terrain =
-	  | Empty
-	  | Floor
-		| Wall
+		mutable obj        : Abstract.obj option }
 	
 	let lookup_terrain terrain = match terrain with
-	  | Empty  -> (' ', 0, A.color_pair Colour.gray)
-	  | Floor  -> ('.', 0, A.color_pair Colour.white)
-		| Wall   -> ('#', blocked lor opaque, A.color_pair Colour.white)
+	  | Empty  -> ((' ', A.color_pair Colour.gray), 0)
+	  | Floor  -> (('.', A.color_pair Colour.white), 0)
+		| Wall   -> (('#', A.color_pair Colour.white), blocked lor opaque)
 
-  (* Returns a fresh copy of a tile *)
-  let copy tile = 
-	  { typ = tile.typ; properties = tile.properties; attr = tile.attr }
-
-	(* Terrain types and their base properties *)
+  (* Make a new tile with the given terrain type *)
   let make terrain = 
-	  let (typ, prop, attr) = lookup_terrain terrain in
-		  { typ = typ; properties = prop; attr = attr }
+	  let (look, prop) = lookup_terrain terrain in
+		  { typ = terrain; look = look; properties = prop; obj = None }
 	
   (* Assign a tile to a certain terrain type *)
 	let assign tile terrain =
-	  let (typ, prop, attr) = lookup_terrain terrain in
-	    tile.typ <- typ;
-		  tile.properties <- prop;
-		  tile.attr <- attr
+	  let (look, prop) = lookup_terrain terrain in
+	    tile.typ <- terrain;
+			tile.look <- look;
+		  tile.properties <- prop
 
   (* Properties utilities *)
 	let is prop tile    = (tile.properties land prop) != 0
 	let set prop tile   = tile.properties <- tile.properties lor prop
 	let unset prop tile = tile.properties <- tile.properties land (lnot prop)
 
+  (* Place an object on a tile *)
+	let place tile obj = match tile.obj with
+	  | None -> 
+				set (obj#get_properties ()) tile;
+		    tile.obj <- Some obj
+		| _ -> Log.debug "ERROR: tile already contains object"
+
+	(* Interact with the object on the tile *)
+	let interact tile = match tile.obj with
+	  | None -> ()
+		| Some obj -> obj#interact ()
+
   (* Printing utilities *)
-	let print_internal win tile x y ch attr =
-	  let ch = match ch with
-		  | None -> int_of_char tile.typ
-			| Some x -> x
-		in
-	  let attr = match attr with
-		  | None -> tile.attr
-			| Some x -> x
-		in
+	let print_look win tile x y (ch, attr) =
 	  if (is mapped tile) then 
 		  begin
 			  begin match (is visible tile) with
 		      | true -> wattrset win attr
 			    | false -> wattrset win default_attr
 				end;
-        ignore (mvwaddch win y x ch)
+        ignore (mvwaddch win y x (int_of_char ch))
 		  end
 		else
 		  ignore (mvwaddch win y x (int_of_char  ' '))
-	let print win tile x y = print_internal win tile x y None None
-	let print_ch win tile x y ch attr = 
-	  print_internal win tile x y (Some ch) (Some attr)
+	let print win tile x y = match tile.obj with
+	  | None -> print_look win tile x y tile.look
+		| Some obj -> print_look win tile x y (obj#get_look ())
 end
 
 (* -------------------------- Map *)
 module type MAP_TYPE = sig
   type t
-	type actor
-	type obj
-	type item
 	type tile = Tile.t
 
 	exception Out_of_bounds
@@ -107,7 +98,7 @@ module type MAP_TYPE = sig
 	val print    : Curses.window -> t -> int * int -> unit
 end
 
-module Map : Map_type = struct
+module Map : MAP_TYPE = struct
   type tile = Tile.t
   type t = {
 	  a      : tile array array;
@@ -121,7 +112,7 @@ module Map : Map_type = struct
 		  raise Out_of_bounds
 
   let create ?(height = map_height) ?(width = map_width) () =  
-	  let f _ = Array.init height (fun _ -> Tile.make Tile.Floor) in
+	  let f _ = Array.init height (fun _ -> Tile.make Floor) in
 	    { a = Array.init width f;
 		    height = height;
 		    width = width }
@@ -132,6 +123,10 @@ module Map : Map_type = struct
 	let get_tile map x y = 
 	  check_bounds map x y;
 		map.a.(x).(y)
+
+	let add_obj map obj x y =
+		let tile = get_tile map x y in
+		  Tile.place tile obj
 	
 	let print win map (x0, y0) = 
 	  for i = 0 to Config.view_width - 1 do

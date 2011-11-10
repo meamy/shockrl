@@ -8,15 +8,16 @@ type actor_typ =
 	| ShotgunHybrid
 	| GrenadeHybrid
 
-let get_char typ = match typ with
-  | Player        -> '@'
-	| Hybrid        -> 'H'
-	| ShotgunHybrid -> 'S'
-	| GrenadeHybrid -> 'G'
+let lookup_actor typ = match typ with
+  | Player        -> ('@', A.color_pair Colour.white)
+	| Hybrid        -> ('H', A.color_pair Colour.blue)
+	| ShotgunHybrid -> ('S', A.color_pair Colour.blue)
+	| GrenadeHybrid -> ('G', A.color_pair Colour.green)
 
 class virtual actor = object
+  inherit Abstract.actor
   val virtual typ : actor_typ
-	val virtual mutable attr : int
+	val virtual mutable look : look
   val virtual pos : position
 	val virtual mutable map_ref : Map.t
 
@@ -32,13 +33,13 @@ class virtual actor = object
 						Tile.set blocked tile;
 						pos.x <- x;
 						pos.y <- y
-					end
+					end;
+				  Tile.interact tile
 			with Map.Out_of_bounds -> ()
 
 	method print win (x0, y0) =
-	  let ch = int_of_char (get_char typ) in
 		let tile = Map.get_tile map_ref pos.x pos.y in
-		  Tile.print_ch win tile (pos.x - x0) (pos.y - y0) ch attr;
+		  Tile.print_look win tile (pos.x - x0) (pos.y - y0) look;
 			ignore (wnoutrefresh win)
 
 end
@@ -46,7 +47,7 @@ end
 class player map x y = object (s)
   inherit actor as super
 	val typ = Player
-	val mutable attr = A.color_pair Colour.white
+	val mutable look = ('@', A.color_pair Colour.white)
 	val pos = { x = x; y = y }
 	val mutable map_ref = map
 

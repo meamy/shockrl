@@ -18,6 +18,13 @@ type direction =
 	| W
 	| NW
 
+type terrain =
+  | Empty
+	| Floor
+	| Wall
+
+type look = char * int
+
 (* Properties *)
 let blocked  = 0x01
 let mapped   = 0x01 lsl 1
