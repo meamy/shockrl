@@ -6,14 +6,6 @@ module Itree = Itree.Make(struct
 														let compare = compare
 													end)
 
-(* Enumerate a list of numbers from low to high *)
-let number_list low high =
-  let rec acc low high lst = match low <= high with
-	  | true -> acc low (high - 1) (high::lst)
-		| false -> lst
-	in
-	  acc low high []
-
 (* Produce a line from (x, y) to (u, v) *)
 let los (x0, y0) (x1, y1) =
   let (dx, dy) = (abs (x1 - x0), abs (y1 - y0)) in

@@ -47,3 +47,12 @@ let get_coords x y dir = match dir with
 	| SW -> (x - 1, y + 1) 
 	| W ->  (x - 1, y)
   | NW -> (x - 1, y - 1)
+
+(* Enumerate a list of numbers from low to high *)
+let number_list low high =
+  let rec acc low high lst = match low <= high with
+	  | true -> acc low (high - 1) (high::lst)
+		| false -> lst
+	in
+	  acc low high []
+

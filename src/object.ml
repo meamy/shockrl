@@ -26,7 +26,7 @@ class virtual obj = object
 	method get_properties () = properties
 end
 
-class door map x y = object
+class door map x y = object (s)
   inherit obj
 	val typ = Door
 	val mutable look = ('+', A.color_pair Colour.yellow)
@@ -34,12 +34,21 @@ class door map x y = object
   val mutable properties = blocked lor opaque
   val map_ref = map
 
-  method interact () = 
+	method open_door () =
 	  let (state, attr) = look in
       if state = '+' then begin
 	      look <- ('/', attr);
         Tile.unset properties (Map.get_tile map_ref x y)
 	    end
+	
+	method close_door () =
+	  let (state, attr) = look in
+      if state = '/' then begin
+	      look <- ('+', attr);
+        Tile.set properties (Map.get_tile map_ref x y)
+	    end
+
+  method interact = s#open_door
 
   initializer
     Tile.set properties (Map.get_tile map_ref x y)

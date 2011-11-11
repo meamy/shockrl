@@ -4,6 +4,7 @@ open Curses;;
 open Util;;
 
 class virtual actor = object
+  method virtual do_turn : unit -> int
 end
 
 class virtual obj = object

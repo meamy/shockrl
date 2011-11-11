@@ -4,30 +4,25 @@ open Object;;
 open Curses;;
 open Util;;
 
+module PQueue = Heap.Make(struct
+                            type t = int
+													  let compare = Pervasives.compare
+												  end)
+
 let new_game () =
 	let map = Map.create ~height:40 ~width:80 () in
 	let p1 = new player map 0 0 in
 	let d1 = new door map 21 10 in
-	let rec test () = 
-	  Display.print_map map p1;
-	  match Cmd.lookup (getch ()) with
-	    | Cmd.Quit ->
-			    let str = String.lowercase (Console.read "Exit?") in
-			      if (str = "y") || (str = "yes") then ()
-						else test ()
-		  | Cmd.Up -> 
-		      p1#move N;
-			  	test ()
-		  | Cmd.Down -> 
-		      p1#move S;
-			  	test ()
-			| Cmd.Left ->
-			    p1#move W;
-					test ()
-			| Cmd.Right ->
-			    p1#move E;
-					test ()
-		  | _ -> test ()
+	let t1 = new trigger map 21 10 2 d1#open_door d1#close_door in
+	let rec time_evo queue = match PQueue.is_empty queue with
+	  | true -> ()
+		| false ->
+		    let (_, actor) = PQueue.get_min queue in
+				let res = actor#do_turn () in
+		      p1#update_map ();
+				  wrap (doupdate ());
+				  if res = -1 then ()
+					else time_evo (PQueue.insert res actor (PQueue.remove_min queue))
 	in
 	  flushinp ();
 		Display.bootstrap_hud ();
@@ -35,5 +30,7 @@ let new_game () =
 		Tile.place (Map.get_tile map 21 10) (d1 :> Abstract.obj);
 		p1#reset_fov ();
 		p1#set_fov ();
-		test ();
+		p1#update_map ();
+	  wrap (doupdate ());
+		time_evo (PQueue.insert 5 (t1 :> Abstract.actor) (PQueue.insert 5 (p1 :> Abstract.actor) (PQueue.empty)));
 		Display.close_hud ()
