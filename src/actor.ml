@@ -93,7 +93,7 @@ class player map x y = object (s)
 	  let get_low_coord i mn mx low high =
 		  if i - low < 0 then 0
 		  else if i + high > mx then mx - (low + high)
-			else begin Log.debug (string_of_int (i - low)); i - low end
+			else i - low
 		in
 		let wd = Config.view_width / 2 in
 		let ht = Config.view_height / 2 in
