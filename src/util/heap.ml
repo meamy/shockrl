@@ -5,6 +5,7 @@ module Make(M : Map.OrderedType) = struct
 	type 'a pairHeap = 
 	  | Empty 
 		| Heap of key * 'a * ('a pairHeap) list
+  type 'a t = 'a pairHeap
 
   exception Empty_heap
 

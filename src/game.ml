@@ -9,6 +9,45 @@ module PQueue = Heap.Make(struct
 													  let compare = Pervasives.compare
 												  end)
 
+type t = {
+  player      : Actor.player;
+  current_map : Map.t;
+  turn_queue  : Abstract.actor PQueue.t
+}
+
+let create () =
+  let map = Map.create ~height:40 ~width:80 () in
+  let p   = new player map 0 0 in
+    { player = p;
+      current_map = map;
+      turn_queue = PQueue.insert 5 (p :> Abstract.actor) PQueue.empty }
+
+let update_world game = 
+  game.player#update_map ();
+  wrap (doupdate ())
+
+let timestep game = match PQueue.is_empty game.turn_queue with
+  | true -> None
+  | false ->
+      let (_, actor) = PQueue.get_min game.turn_queue in
+      let res = actor#do_turn () in
+        update_world game;
+        if res = -1 then None
+        else Some { game with 
+            turn_queue = PQueue.insert res actor (PQueue.remove_min game.turn_queue) }
+
+let resume game =
+  let rec timeloop game = match (timestep game) with
+    | None -> ()
+    | Some game -> timeloop game
+  in
+    flushinp ();
+    Display.bootstrap_hud ();
+    update_world game;
+    timeloop game;
+    Display.close_hud ()
+
+
 let new_game () =
 	let map = Map.create ~height:40 ~width:80 () in
 	let p1 = new player map 0 0 in

@@ -7,7 +7,7 @@ let map_height = 20
 let default_attr = A.bold lor A.color_pair Colour.gray
 
 (* ------------------- Tile *)
-module type TILE_TYPE = sig
+module Tile : sig 
   type t
 
 	val make     : terrain -> t
@@ -22,10 +22,7 @@ module type TILE_TYPE = sig
 
 	val print_look : Curses.window -> t -> int -> int -> look -> unit
 	val print      : Curses.window -> t -> int -> int -> unit
-end
-
-
-module Tile : TILE_TYPE = struct
+end = struct
   type t = {
     mutable typ        : terrain;
 		mutable look       : look;
@@ -84,7 +81,7 @@ module Tile : TILE_TYPE = struct
 end
 
 (* -------------------------- Map *)
-module type MAP_TYPE = sig
+module Map : sig
   type t
 	type tile = Tile.t
 
@@ -96,9 +93,7 @@ module type MAP_TYPE = sig
 
 	val get_tile : t -> int -> int -> tile
 	val print    : Curses.window -> t -> int * int -> unit
-end
-
-module Map : MAP_TYPE = struct
+end = struct
   type tile = Tile.t
   type t = {
 	  a      : tile array array;

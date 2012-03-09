@@ -6,7 +6,7 @@ let width = 30
 let height = 10
 
 let new_game () = Game.new_game ()
-let continue () = ()
+let continue () = Game.resume (Game.create ())
 let instructions () = ()
 let credits () = ()
 let exit () = 
