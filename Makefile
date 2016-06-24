@@ -1,28 +1,41 @@
-all:	bin
+# OASIS_START
+# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
-.PHONY: bin doc regression check baselines
-bin: Makefile.config
-	cd src && make
+SETUP = ocaml setup.ml
 
-config: Makefile.config
-	touch src/.depend
-	cd ocaml-curses && make
-	cd src && make depend
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-depend: Makefile.config
-	cd src && make depend
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 
-clean: Makefile.config
-	cd src && make clean
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-dg:
-	cd src && make dg
+all:
+	$(SETUP) -all $(ALLFLAGS)
 
-tags:
-	otags `find src/ -name "*.ml"`
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
+
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
+
+clean:
+	$(SETUP) -clean $(CLEANFLAGS)
+
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
 
 configure:
-	autoconf
+	$(SETUP) -configure $(CONFIGUREFLAGS)
 
-Makefile.config: configure
-	./configure
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP
