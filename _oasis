@@ -1,0 +1,25 @@
+Name: ShockRL
+Version: 0.1
+Synopsis: A Roguelike based on the 1994 computer game classic System Shock
+Authors: Matt Amy <matt.e.amy@gmail.com>
+License: GPL
+
+#Description:
+#Homepage:
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Library "util"
+  Path: src/util
+  Modules: Colour, Log, Itree, Rand, Util
+  BuildDepends:
+    curses
+
+Executable "shockrl"
+  Path: src
+  MainIs: rl.ml
+  CompiledObject: best
+  BuildDepends:
+    util, curses
